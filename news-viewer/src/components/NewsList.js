@@ -49,9 +49,10 @@ const NewsList = () => {
   // articles 값이 유효할 때
   return (
     <NewsListBlock>
-      {articles && articles.map(article => (
-        <NewsItem key={article.url} article={article} />
-      ))}
+      {articles &&
+        articles.map(article => (
+          <NewsItem key={article.url} article={article} />
+        ))}
     </NewsListBlock>
   );
 };
