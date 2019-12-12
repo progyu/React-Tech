@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import React, { Component } from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
 import axios from 'axios';
@@ -16,7 +17,7 @@ const NewsListBlock = styled.div`
   }
 `;
 
-const NewsList = () => {
+const NewsList = ({ category }) => {
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +26,9 @@ const NewsList = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const query = category === 'all' ? '' : `&category=${category}`;
         const response = await axios.get(
-          'https://newsapi.org/v2/top-headlines?country=kr&apiKey=198704bb21044702b26ab96578b42619',
+          `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=198704bb21044702b26ab96578b42619`,
         );
         setArticles(response.data.articles);
       } catch (e) {
@@ -35,7 +37,7 @@ const NewsList = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [category]);
 
   // 대기 중일 때
   if (loading) {
@@ -58,3 +60,55 @@ const NewsList = () => {
 };
 
 export default NewsList;
+
+// class NewsList extends Component {
+//   state = {
+//     articles: null,
+//     loading: false,
+//   };
+
+//   fetchData = async () => {
+//     const { category } = this.props;
+
+//     this.setState({ loading: true });
+//     try {
+//       const query = category === 'all' ? '' : `&category=${category}`;
+//       const response = await axios.get(
+//         `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=198704bb21044702b26ab96578b42619`,
+//       );
+//       this.setState({ articles: response.data.articles });
+//     } catch (e) {
+//       console.log(e);
+//     }
+//     this.setState({ loading: false });
+//   };
+
+//   componentDidMount() {
+//     this.fetchData();
+//   }
+
+//   componentDidUpdate(prevProps) {
+//     if (prevProps.category !== this.props.category) {
+//       this.fetchData();
+//     }
+//   }
+
+//   // 대기 중일 때
+//   if(loading) {
+//     return <NewsListBlock>대기중...</NewsListBlock>;
+//   }
+
+//   render() {
+//     const { articles } = this.state;
+//     return (
+//       <NewsListBlock>
+//         {articles &&
+//           articles.map(article => (
+//             <NewsItem key={article.url} article={article} />
+//           ))}
+//       </NewsListBlock>
+//     );
+//   }
+// }
+
+// export default NewsList;
